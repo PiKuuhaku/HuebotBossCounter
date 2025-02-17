@@ -48,6 +48,17 @@
             lblText = new Label();
             lblBossList3 = new Label();
             cbBossList3 = new ComboBox();
+            tabEstatisticas = new TabPage();
+            listStats = new ListBox();
+            lblKillNumberStatsText = new Label();
+            lblDiffNumberStats = new Label();
+            lblDiffNumberStatsText = new Label();
+            lblKillNumberStats = new Label();
+            cbLobbySize = new ComboBox();
+            lblLobbySize = new Label();
+            listDrops = new ListBox();
+            lblBossList4 = new Label();
+            cbBossList4 = new ComboBox();
             tabAdicionar = new TabPage();
             chkFullLobby = new CheckBox();
             btnAdicionar = new Button();
@@ -78,6 +89,7 @@
             tabControl1.SuspendLayout();
             tabAutenticacao.SuspendLayout();
             tabHistorico.SuspendLayout();
+            tabEstatisticas.SuspendLayout();
             tabAdicionar.SuspendLayout();
             tabAtualizar.SuspendLayout();
             SuspendLayout();
@@ -87,6 +99,7 @@
             tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl1.Controls.Add(tabAutenticacao);
             tabControl1.Controls.Add(tabHistorico);
+            tabControl1.Controls.Add(tabEstatisticas);
             tabControl1.Controls.Add(tabAdicionar);
             tabControl1.Controls.Add(tabAtualizar);
             tabControl1.Location = new Point(4, 0);
@@ -291,6 +304,137 @@
             cbBossList3.Size = new Size(355, 23);
             cbBossList3.TabIndex = 2;
             cbBossList3.SelectedIndexChanged += cbBossList3_SelectedIndexChanged;
+            // 
+            // tabEstatisticas
+            // 
+            tabEstatisticas.Controls.Add(listStats);
+            tabEstatisticas.Controls.Add(lblKillNumberStatsText);
+            tabEstatisticas.Controls.Add(lblDiffNumberStats);
+            tabEstatisticas.Controls.Add(lblDiffNumberStatsText);
+            tabEstatisticas.Controls.Add(lblKillNumberStats);
+            tabEstatisticas.Controls.Add(cbLobbySize);
+            tabEstatisticas.Controls.Add(lblLobbySize);
+            tabEstatisticas.Controls.Add(listDrops);
+            tabEstatisticas.Controls.Add(lblBossList4);
+            tabEstatisticas.Controls.Add(cbBossList4);
+            tabEstatisticas.Location = new Point(4, 24);
+            tabEstatisticas.Name = "tabEstatisticas";
+            tabEstatisticas.Size = new Size(364, 267);
+            tabEstatisticas.TabIndex = 4;
+            tabEstatisticas.Text = "Estatisticas";
+            tabEstatisticas.UseVisualStyleBackColor = true;
+            // 
+            // listStats
+            // 
+            listStats.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            listStats.FormattingEnabled = true;
+            listStats.ItemHeight = 15;
+            listStats.Location = new Point(6, 151);
+            listStats.Name = "listStats";
+            listStats.Size = new Size(355, 109);
+            listStats.TabIndex = 21;
+            listStats.Visible = false;
+            // 
+            // lblKillNumberStatsText
+            // 
+            lblKillNumberStatsText.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblKillNumberStatsText.AutoSize = true;
+            lblKillNumberStatsText.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblKillNumberStatsText.Location = new Point(256, 79);
+            lblKillNumberStatsText.Name = "lblKillNumberStatsText";
+            lblKillNumberStatsText.Size = new Size(41, 21);
+            lblKillNumberStatsText.TabIndex = 17;
+            lblKillNumberStatsText.Text = "Kills:";
+            lblKillNumberStatsText.Visible = false;
+            // 
+            // lblDiffNumberStats
+            // 
+            lblDiffNumberStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblDiffNumberStats.AutoSize = true;
+            lblDiffNumberStats.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblDiffNumberStats.Location = new Point(293, 119);
+            lblDiffNumberStats.Name = "lblDiffNumberStats";
+            lblDiffNumberStats.Size = new Size(68, 30);
+            lblDiffNumberStats.TabIndex = 20;
+            lblDiffNumberStats.Text = "99999";
+            lblDiffNumberStats.Visible = false;
+            // 
+            // lblDiffNumberStatsText
+            // 
+            lblDiffNumberStatsText.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblDiffNumberStatsText.AutoSize = true;
+            lblDiffNumberStatsText.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblDiffNumberStatsText.Location = new Point(223, 104);
+            lblDiffNumberStatsText.Name = "lblDiffNumberStatsText";
+            lblDiffNumberStatsText.Size = new Size(141, 15);
+            lblDiffNumberStatsText.TabIndex = 19;
+            lblDiffNumberStatsText.Text = "Kills desde o ultimo drop:";
+            lblDiffNumberStatsText.Visible = false;
+            // 
+            // lblKillNumberStats
+            // 
+            lblKillNumberStats.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblKillNumberStats.AutoSize = true;
+            lblKillNumberStats.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblKillNumberStats.Location = new Point(293, 72);
+            lblKillNumberStats.Name = "lblKillNumberStats";
+            lblKillNumberStats.Size = new Size(68, 30);
+            lblKillNumberStats.TabIndex = 18;
+            lblKillNumberStats.Text = "99999";
+            lblKillNumberStats.Visible = false;
+            // 
+            // cbLobbySize
+            // 
+            cbLobbySize.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cbLobbySize.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbLobbySize.FormattingEnabled = true;
+            cbLobbySize.Location = new Point(319, 48);
+            cbLobbySize.Name = "cbLobbySize";
+            cbLobbySize.Size = new Size(42, 23);
+            cbLobbySize.TabIndex = 16;
+            cbLobbySize.Visible = false;
+            cbLobbySize.SelectedIndexChanged += cbLobbySize_SelectedIndexChanged;
+            // 
+            // lblLobbySize
+            // 
+            lblLobbySize.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblLobbySize.AutoSize = true;
+            lblLobbySize.Location = new Point(205, 51);
+            lblLobbySize.Name = "lblLobbySize";
+            lblLobbySize.Size = new Size(113, 15);
+            lblLobbySize.TabIndex = 7;
+            lblLobbySize.Text = "Jogadores no lobby:";
+            lblLobbySize.Visible = false;
+            // 
+            // listDrops
+            // 
+            listDrops.FormattingEnabled = true;
+            listDrops.ItemHeight = 15;
+            listDrops.Location = new Point(6, 51);
+            listDrops.Name = "listDrops";
+            listDrops.Size = new Size(120, 94);
+            listDrops.TabIndex = 6;
+            listDrops.Visible = false;
+            // 
+            // lblBossList4
+            // 
+            lblBossList4.AutoSize = true;
+            lblBossList4.Location = new Point(6, 4);
+            lblBossList4.Name = "lblBossList4";
+            lblBossList4.Size = new Size(94, 15);
+            lblBossList4.TabIndex = 5;
+            lblBossList4.Text = "Selecione o Boss";
+            // 
+            // cbBossList4
+            // 
+            cbBossList4.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cbBossList4.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbBossList4.FormattingEnabled = true;
+            cbBossList4.Location = new Point(6, 22);
+            cbBossList4.Name = "cbBossList4";
+            cbBossList4.Size = new Size(355, 23);
+            cbBossList4.TabIndex = 4;
+            cbBossList4.SelectedIndexChanged += cbBossList4_SelectedIndexChanged;
             // 
             // tabAdicionar
             // 
@@ -634,6 +778,8 @@
             tabAutenticacao.PerformLayout();
             tabHistorico.ResumeLayout(false);
             tabHistorico.PerformLayout();
+            tabEstatisticas.ResumeLayout(false);
+            tabEstatisticas.PerformLayout();
             tabAdicionar.ResumeLayout(false);
             tabAdicionar.PerformLayout();
             tabAtualizar.ResumeLayout(false);
@@ -690,5 +836,16 @@
         private ComboBox cbKillDrop;
         private Label lblKillDrop;
         private CheckBox chkFullLobby;
+        private TabPage tabEstatisticas;
+        private Label lblBossList4;
+        private ComboBox cbBossList4;
+        private ListBox listDrops;
+        private ComboBox cbLobbySize;
+        private Label lblLobbySize;
+        private Label lblKillNumberStatsText;
+        private Label lblDiffNumberStats;
+        private Label lblDiffNumberStatsText;
+        private Label lblKillNumberStats;
+        private ListBox listStats;
     }
 }

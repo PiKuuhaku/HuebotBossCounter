@@ -27,6 +27,7 @@ namespace HuebotBossCounter
             InitializeComponent();
             tabControlHelper = new TabControlHelper(tabControl1);
             tabControlHelper.HidePage(tabHistorico);
+            tabControlHelper.HidePage(tabEstatisticas);
             tabControlHelper.HidePage(tabAdicionar);
             tabControlHelper.HidePage(tabAtualizar);
             txtUsuario.Text = Settings.Default.User.ToString();
@@ -95,7 +96,11 @@ Nova Senha:", ref novaSenha);
         private void ShowTabsByPermission(Usuario usuario)
         {
             if (usuario.Permissions.Contains("Read"))
+            {
                 tabControlHelper.ShowPage(tabHistorico);
+                tabControlHelper.ShowPage(tabEstatisticas);
+
+            }
             if (usuario.Permissions.Contains("Write"))
             {
                 tabControlHelper.ShowPage(tabAdicionar);
@@ -122,6 +127,7 @@ Nova Senha:", ref novaSenha);
                 cbBossList.Items.Add(item.Name);
                 cbBossList2.Items.Add(item.Name);
                 cbBossList3.Items.Add(item.Name);
+                cbBossList4.Items.Add(item.Name);
             }
         }
 
@@ -224,7 +230,7 @@ Nova Senha:", ref novaSenha);
         private void btnAdicionar_Click(object sender, EventArgs e)
         {
             var kill = _killsContext.Kills.Find(f => f.BossName == cbBossList.SelectedItem.ToString()).FirstOrDefault();
-            
+
             var filter = Builders<Kills>.Filter.Eq(f => f._id, kill._id);
 
             var qtdeDrops = clbDrops.CheckedItems.Count;
@@ -232,11 +238,11 @@ Nova Senha:", ref novaSenha);
 
             if (rbNoDrops.Checked)
             {
-                if(chkFullLobby.Checked)
+                if (chkFullLobby.Checked)
                 {
                     kill.TotalDeaths += 4;
                     _killsContext.Kills.ReplaceOne(filter, kill);
-                    MessageBox.Show($"Kills {kill.TotalDeaths-3} à {kill.TotalDeaths} adicionadas no histórico.", "Sucesso");
+                    MessageBox.Show($"Kills {kill.TotalDeaths - 3} à {kill.TotalDeaths} adicionadas no histórico.", "Sucesso");
                 }
                 else
                 {
@@ -492,7 +498,7 @@ Nova Senha:", ref novaSenha);
                 var kills = _killsContext.Kills.Find(f => f.BossName == cbBossList3.SelectedItem.ToString()).FirstOrDefault();
                 lblKillCount.Text = kills.TotalDeaths.ToString();
                 lblDropCount.Text = kills.DropHistory.Count.ToString();
-                lblDiffNumber.Text = kills.DropHistory.Any() ? (kills.TotalDeaths - kills.DropHistory.LastOrDefault().KillNumber).ToString() : "0";
+                lblDiffNumber.Text = kills.DropHistory.Any() ? (kills.TotalDeaths - kills.DropHistory.LastOrDefault().KillNumber).ToString() : kills.TotalDeaths.ToString();
 
                 lvDropHistory.View = View.Details;
                 lvDropHistory.LabelEdit = true;
@@ -548,6 +554,124 @@ Nova Senha:", ref novaSenha);
         {
             lblKillDrop.Visible = rbMultipleDrop.Checked;
             cbKillDrop.Visible = rbMultipleDrop.Checked;
+        }
+
+        private void cbBossList4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            listDrops.Visible = !string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString());
+            listStats.Visible = !string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString());
+            lblLobbySize.Visible = !string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString());
+            cbLobbySize.Visible = !string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString());
+
+            lblDiffNumberStatsText.Visible = !string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString());
+            lblDiffNumberStats.Visible = !string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString());
+            lblKillNumberStatsText.Visible = !string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString());
+            lblKillNumberStats.Visible = !string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString());
+
+            if (!string.IsNullOrEmpty(cbBossList4.SelectedItem.ToString()))
+            {
+                listDrops.Items.Clear();
+                cbLobbySize.Items.Clear();
+                var boss = _bossContext.Boss.Find(f => f.Name == cbBossList4.SelectedItem.ToString()).FirstOrDefault();
+                var kills = _killsContext.Kills.Find(f => f.BossName == cbBossList4.SelectedItem.ToString()).FirstOrDefault();
+                var diffNumber = kills.DropHistory.Any() ? (kills.TotalDeaths - kills.DropHistory.LastOrDefault().KillNumber) : kills.TotalDeaths;
+                lblKillNumberStats.Text = kills.TotalDeaths.ToString();
+                lblDiffNumberStats.Text = diffNumber.ToString();
+
+                List<decimal> listPercentages = new List<decimal>();
+
+                foreach (var item in boss.Drops)
+                {
+                    listPercentages.Add(item.DropPercent);
+                    listDrops.Items.Add($"{item.ItemName}: {item.DropPercent}%");
+                }
+                int LongestItemLength = 0;
+                for (int i = 0; i < listDrops.Items.Count; i++)
+                {
+                    Graphics g = listDrops.CreateGraphics();
+                    int tempLength = Convert.ToInt32((
+                            g.MeasureString(
+                                    listDrops.Items[i].ToString(),
+                                    this.listDrops.Font
+                                )
+                            ).Width);
+                    if (tempLength > LongestItemLength)
+                    {
+                        LongestItemLength = tempLength;
+                    }
+                }
+                listDrops.Width = LongestItemLength + 1;
+
+                for (int i = 1; i <= (boss.Name == "Arcane Construct" ? 6 : 10); i++)
+                {
+                    cbLobbySize.Items.Add(i);
+                }
+
+                ProbabilityCount(listPercentages, diffNumber);
+            }
+        }
+
+        private void cbLobbySize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var players = Convert.ToInt32(cbLobbySize.SelectedItem);
+            if (players > 0) 
+            {
+                listDrops.Items.Clear();
+                var boss = _bossContext.Boss.Find(f => f.Name == cbBossList4.SelectedItem.ToString()).FirstOrDefault();
+                var kills = _killsContext.Kills.Find(f => f.BossName == cbBossList4.SelectedItem.ToString()).FirstOrDefault();
+                var diffNumber = kills.DropHistory.Any() ? (kills.TotalDeaths - kills.DropHistory.LastOrDefault().KillNumber) : kills.TotalDeaths;
+
+                List<decimal> listPercentages = new List<decimal>();
+
+                foreach (var item in boss.Drops)
+                {
+                    var percertToAdd = boss.Name == "Arcane Construct" ? 33 * (players <= 3 ? 0 : players - 3) : 20 * (players <= 5 ? 0 : players - 5);
+                    decimal finalPercentage = item.DropPercent + ((item.DropPercent * percertToAdd) / 100);
+                    listPercentages.Add(finalPercentage);
+                    listDrops.Items.Add($"{item.ItemName}: {finalPercentage}%");
+                }
+                int LongestItemLength = 0;
+                for (int i = 0; i < listDrops.Items.Count; i++)
+                {
+                    Graphics g = listDrops.CreateGraphics();
+                    int tempLength = Convert.ToInt32((
+                            g.MeasureString(
+                                    listDrops.Items[i].ToString(),
+                                    this.listDrops.Font
+                                )
+                            ).Width);
+                    if (tempLength > LongestItemLength)
+                    {
+                        LongestItemLength = tempLength;
+                    }
+                }
+                listDrops.Width = LongestItemLength + 1;
+
+                ProbabilityCount(listPercentages, diffNumber);
+            }
+        }
+
+        private void ProbabilityCount(List<decimal> chances, int diff)
+        {
+            listStats.Items.Clear();
+            decimal chanceOfZeroDrops = 1;
+            foreach (var chance in chances)
+            {
+                var chanceOfNot = (100 - chance) / 100;
+                chanceOfZeroDrops = chanceOfZeroDrops * chanceOfNot;
+            }
+            double defaultChance = Double.Round((1 - Convert.ToDouble(chanceOfZeroDrops)) * 100, 2);
+            listStats.Items.Add($"Chance de qualquer drop -> {defaultChance}% (Aprox. 1 a cada {Convert.ToInt32(1 / (defaultChance / 100))})");
+
+            double chanceNoDropsAfterKills = Math.Pow(Convert.ToDouble(chanceOfZeroDrops), Convert.ToDouble(diff));
+            double chanceAfterKills = Double.Round((1 - chanceNoDropsAfterKills) * 100, 2);
+            listStats.Items.Add($"Chance de qualquer drop depois de {diff} kill(s) -> {((diff == 0 ? defaultChance : chanceAfterKills) > 100 ? 100 : (diff == 0 ? defaultChance : chanceAfterKills))}%");
+            listStats.Items.Add($"(Considerando {(Convert.ToInt32(cbLobbySize.SelectedItem) <= 0 ? 1 : Convert.ToInt32(cbLobbySize.SelectedItem))} player(s) para todas as kills)");
+            //listStats.Items.Add($"(Aprox. 1 a cada {Convert.ToInt32(1 / ((diff == 0 ? defaultChance : chanceAfterKills) / 100))})");
+            listStats.Items.Add($"Está dentro da estatística/média de chances? -> {((diff == 0 ? defaultChance : chanceAfterKills) < 100 ? "Sim" : "Não (RIP sorte)")}");
+            listStats.Items.Add("");
+            listStats.Items.Add("OBS: A probabildade cumulativa é apenas ilustrativa. Chances");
+            listStats.Items.Add("de drop independentes não permitem acumular probabilidade.");
         }
     }
 }
