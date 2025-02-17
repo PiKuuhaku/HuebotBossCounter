@@ -463,6 +463,7 @@
             // 
             // chkFullLobby
             // 
+            chkFullLobby.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             chkFullLobby.AutoSize = true;
             chkFullLobby.Location = new Point(7, 241);
             chkFullLobby.Name = "chkFullLobby";
@@ -486,6 +487,7 @@
             // 
             // cbKillDrop
             // 
+            cbKillDrop.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             cbKillDrop.DropDownStyle = ComboBoxStyle.DropDownList;
             cbKillDrop.FormattingEnabled = true;
             cbKillDrop.Items.AddRange(new object[] { "1", "2", "3", "4" });
@@ -497,6 +499,7 @@
             // 
             // lblKillDrop
             // 
+            lblKillDrop.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lblKillDrop.AutoSize = true;
             lblKillDrop.Location = new Point(168, 242);
             lblKillDrop.Name = "lblKillDrop";
