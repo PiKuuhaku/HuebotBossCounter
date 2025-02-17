@@ -63,7 +63,7 @@ namespace HuebotBossCounter
                         MessageBox.Show("Senha inválida.", "Erro");
                     else
                     {
-                        if(decodedString == "123456")
+                        if (decodedString == "123456")
                         {
                             string novaSenha = "";
                             var dialog = ConfirmPassword.PasswordInputBox("Alterar senha padrão", @"É necessário atualizar a senha para continuar.
@@ -137,7 +137,7 @@ Nova Senha:", ref novaSenha);
             cbPlayerNumber.Items.Clear();
 
             foreach (var item in boss.Drops)
-                clbDrops.Items.Add(item);
+                clbDrops.Items.Add(item.ItemName);
 
             foreach (var item in players)
                 clbPlayers.Items.Add(item.User);
@@ -155,6 +155,7 @@ Nova Senha:", ref novaSenha);
             btnAdicionar.Visible = !string.IsNullOrEmpty(cbBossList.SelectedItem.ToString());
             lblPlayerNumber.Visible = !string.IsNullOrEmpty(cbBossList.SelectedItem.ToString());
             cbPlayerNumber.Visible = !string.IsNullOrEmpty(cbBossList.SelectedItem.ToString());
+            chkFullLobby.Visible = !string.IsNullOrEmpty(cbBossList.SelectedItem.ToString());
         }
 
         private void rbNoDrops_CheckedChanged(object sender, EventArgs e)
@@ -223,8 +224,7 @@ Nova Senha:", ref novaSenha);
         private void btnAdicionar_Click(object sender, EventArgs e)
         {
             var kill = _killsContext.Kills.Find(f => f.BossName == cbBossList.SelectedItem.ToString()).FirstOrDefault();
-            kill.TotalDeaths += 1;
-
+            
             var filter = Builders<Kills>.Filter.Eq(f => f._id, kill._id);
 
             var qtdeDrops = clbDrops.CheckedItems.Count;
@@ -232,8 +232,18 @@ Nova Senha:", ref novaSenha);
 
             if (rbNoDrops.Checked)
             {
-                _killsContext.Kills.ReplaceOne(filter, kill);
-                MessageBox.Show($"Kill {kill.TotalDeaths} adicionada no histórico.", "Sucesso");
+                if(chkFullLobby.Checked)
+                {
+                    kill.TotalDeaths += 4;
+                    _killsContext.Kills.ReplaceOne(filter, kill);
+                    MessageBox.Show($"Kills {kill.TotalDeaths-3} à {kill.TotalDeaths} adicionadas no histórico.", "Sucesso");
+                }
+                else
+                {
+                    kill.TotalDeaths += 1;
+                    _killsContext.Kills.ReplaceOne(filter, kill);
+                    MessageBox.Show($"Kill {kill.TotalDeaths} adicionada no histórico.", "Sucesso");
+                }
             }
             else if (rbMultipleDrop.Checked)
             {
@@ -245,12 +255,27 @@ Nova Senha:", ref novaSenha);
                     MessageBox.Show("Quantidade de jogadores menor que a quantidade de drops", "Erro");
                 else if (Convert.ToInt32(cbPlayerNumber.SelectedItem) <= 0)
                     MessageBox.Show("Kills com drops precisam que seja informado a quantidade de jogadores do lobby", "Erro");
+                else if (chkFullLobby.Checked && Convert.ToInt32(cbKillDrop.SelectedItem) <= 0)
+                    MessageBox.Show("Não é possível adicionar um lobby completo com drop sem selecionar a kill", "Erro");
                 else
                 {
-                    AddDrop(kill, kill.TotalDeaths, clbDrops.CheckedItems[0].ToString(), clbPlayers.CheckedItems[0].ToString());
-                    lastKill = kill.TotalDeaths;
-                    _killsContext.Kills.ReplaceOne(filter, kill);
-                    MessageBox.Show($"Kill {kill.TotalDeaths} adicionada no histórico.", "Sucesso");
+                    if (chkFullLobby.Checked)
+                    {
+                        kill.TotalDeaths += 4;
+                        var killNumber = kill.TotalDeaths + (Convert.ToInt32(cbKillDrop.SelectedItem) - 4);
+                        AddDrop(kill, killNumber, clbDrops.CheckedItems[0].ToString(), clbPlayers.CheckedItems[0].ToString());
+                        lastKill = killNumber;
+                        _killsContext.Kills.ReplaceOne(filter, kill);
+                        MessageBox.Show($"Kills {kill.TotalDeaths - 3} à {kill.TotalDeaths} adicionadas no histórico.", "Sucesso");
+                    }
+                    else
+                    {
+                        kill.TotalDeaths += 1;
+                        AddDrop(kill, kill.TotalDeaths, clbDrops.CheckedItems[0].ToString(), clbPlayers.CheckedItems[0].ToString());
+                        lastKill = kill.TotalDeaths;
+                        _killsContext.Kills.ReplaceOne(filter, kill);
+                        MessageBox.Show($"Kill {kill.TotalDeaths} adicionada no histórico.", "Sucesso");
+                    }
                 }
             }
             else
@@ -312,7 +337,7 @@ Nova Senha:", ref novaSenha);
                     clbPlayers2.Items.Clear();
 
                     foreach (var item in boss.Drops)
-                        clbDrops2.Items.Add(item);
+                        clbDrops2.Items.Add(item.ItemName);
 
                     foreach (var item in players)
                         clbPlayers2.Items.Add(item.User);
@@ -517,6 +542,12 @@ Nova Senha:", ref novaSenha);
 
                 //}
             }
+        }
+
+        private void rbMultipleDrop_CheckedChanged(object sender, EventArgs e)
+        {
+            lblKillDrop.Visible = rbMultipleDrop.Checked;
+            cbKillDrop.Visible = rbMultipleDrop.Checked;
         }
     }
 }

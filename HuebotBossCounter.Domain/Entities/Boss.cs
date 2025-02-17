@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HuebotBossCounter.Domain.Models;
 
 namespace HuebotBossCounter.Domain.Entities
 {
@@ -14,6 +15,6 @@ namespace HuebotBossCounter.Domain.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; } = ObjectId.GenerateNewId().ToString();
         public string Name { get; set; }
-        public List<string> Drops { get; set; }
+        public List<DropChance> Drops { get; set; }
     }
 }

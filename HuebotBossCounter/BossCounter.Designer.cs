@@ -49,6 +49,10 @@
             lblBossList3 = new Label();
             cbBossList3 = new ComboBox();
             tabAdicionar = new TabPage();
+            chkFullLobby = new CheckBox();
+            btnAdicionar = new Button();
+            cbKillDrop = new ComboBox();
+            lblKillDrop = new Label();
             lblPlayerNumber = new Label();
             cbPlayerNumber = new ComboBox();
             lblUtilizacao = new LinkLabel();
@@ -58,7 +62,6 @@
             rbNoDrops = new RadioButton();
             lblPlayer = new Label();
             lblBossDrops = new Label();
-            btnAdicionar = new Button();
             lblBossList = new Label();
             cbBossList = new ComboBox();
             tabAtualizar = new TabPage();
@@ -291,6 +294,10 @@
             // 
             // tabAdicionar
             // 
+            tabAdicionar.Controls.Add(chkFullLobby);
+            tabAdicionar.Controls.Add(btnAdicionar);
+            tabAdicionar.Controls.Add(cbKillDrop);
+            tabAdicionar.Controls.Add(lblKillDrop);
             tabAdicionar.Controls.Add(lblPlayerNumber);
             tabAdicionar.Controls.Add(cbPlayerNumber);
             tabAdicionar.Controls.Add(lblUtilizacao);
@@ -300,7 +307,6 @@
             tabAdicionar.Controls.Add(rbNoDrops);
             tabAdicionar.Controls.Add(lblPlayer);
             tabAdicionar.Controls.Add(lblBossDrops);
-            tabAdicionar.Controls.Add(btnAdicionar);
             tabAdicionar.Controls.Add(lblBossList);
             tabAdicionar.Controls.Add(cbBossList);
             tabAdicionar.Location = new Point(4, 24);
@@ -310,6 +316,50 @@
             tabAdicionar.TabIndex = 1;
             tabAdicionar.Text = "Adicionar";
             tabAdicionar.UseVisualStyleBackColor = true;
+            // 
+            // chkFullLobby
+            // 
+            chkFullLobby.AutoSize = true;
+            chkFullLobby.Location = new Point(7, 241);
+            chkFullLobby.Name = "chkFullLobby";
+            chkFullLobby.Size = new Size(164, 19);
+            chkFullLobby.TabIndex = 20;
+            chkFullLobby.Text = "Adicionar lobby completo";
+            chkFullLobby.UseVisualStyleBackColor = true;
+            chkFullLobby.Visible = false;
+            // 
+            // btnAdicionar
+            // 
+            btnAdicionar.Anchor = AnchorStyles.Bottom;
+            btnAdicionar.Location = new Point(287, 236);
+            btnAdicionar.Name = "btnAdicionar";
+            btnAdicionar.Size = new Size(72, 23);
+            btnAdicionar.TabIndex = 3;
+            btnAdicionar.Text = "Adicionar";
+            btnAdicionar.UseVisualStyleBackColor = true;
+            btnAdicionar.Visible = false;
+            btnAdicionar.Click += btnAdicionar_Click;
+            // 
+            // cbKillDrop
+            // 
+            cbKillDrop.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbKillDrop.FormattingEnabled = true;
+            cbKillDrop.Items.AddRange(new object[] { "1", "2", "3", "4" });
+            cbKillDrop.Location = new Point(239, 237);
+            cbKillDrop.Name = "cbKillDrop";
+            cbKillDrop.Size = new Size(42, 23);
+            cbKillDrop.TabIndex = 19;
+            cbKillDrop.Visible = false;
+            // 
+            // lblKillDrop
+            // 
+            lblKillDrop.AutoSize = true;
+            lblKillDrop.Location = new Point(168, 242);
+            lblKillDrop.Name = "lblKillDrop";
+            lblKillDrop.Size = new Size(71, 15);
+            lblKillDrop.TabIndex = 18;
+            lblKillDrop.Text = "Kill do drop:";
+            lblKillDrop.Visible = false;
             // 
             // lblPlayerNumber
             // 
@@ -384,6 +434,7 @@
             rbMultipleDrop.Text = "Com drop";
             rbMultipleDrop.UseVisualStyleBackColor = true;
             rbMultipleDrop.Visible = false;
+            rbMultipleDrop.CheckedChanged += rbMultipleDrop_CheckedChanged;
             // 
             // rbNoDrops
             // 
@@ -420,18 +471,6 @@
             lblBossDrops.TabIndex = 5;
             lblBossDrops.Text = "Drop";
             lblBossDrops.Visible = false;
-            // 
-            // btnAdicionar
-            // 
-            btnAdicionar.Anchor = AnchorStyles.Bottom;
-            btnAdicionar.Location = new Point(146, 238);
-            btnAdicionar.Name = "btnAdicionar";
-            btnAdicionar.Size = new Size(72, 23);
-            btnAdicionar.TabIndex = 3;
-            btnAdicionar.Text = "Adicionar";
-            btnAdicionar.UseVisualStyleBackColor = true;
-            btnAdicionar.Visible = false;
-            btnAdicionar.Click += btnAdicionar_Click;
             // 
             // lblBossList
             // 
@@ -648,5 +687,8 @@
         private Label lblText2;
         private Label lblDiffNumber;
         private Label lblDiff;
+        private ComboBox cbKillDrop;
+        private Label lblKillDrop;
+        private CheckBox chkFullLobby;
     }
 }
